@@ -12,6 +12,8 @@ export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
 
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN)
     @Put('update')
     UpdateUser (@Body() payload: Required<User>) {
         return this.userService.updateUser(payload)
@@ -19,9 +21,17 @@ export class UsersController {
     
     
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles(UserRole.ADMIN)
+    @Roles(UserRole.SUPER_ADMIN)
     @Delete('delete/:username')
     DeleteUser (@Param('username') username: string) {
         return this.userService.deleteUser(username)
+    }
+
+
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(UserRole.SUPER_ADMIN)
+    @Put('add/admin/:username')
+    addAdmin(@Param('username') username: string) {
+        return this.userService.AddAdmin(username)
     }
 }
